@@ -1,10 +1,10 @@
 import userModel from "../models/userModel.js"
 
-
 // add product to user cart
 const addToCart = async (req, res) => {
     try {
         const { userId, itemId, size } = req.body;
+       
 
         // Fetch user data
         const userData = await userModel.findById(userId);

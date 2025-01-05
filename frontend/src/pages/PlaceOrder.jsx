@@ -32,50 +32,65 @@ const PlaceOrder = () => {
 
   }
   
-  const onSubmitHandler = async (e)=>{
-    e.preventDefault()
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
     try {
-      let orderItems = []
-      for(const items in cartItems){
-        for(const item in cartItems[items]){
-          if(cartItems[item][item]> 0){
-            const itemInfo = structuredClone(products.find(product=>product._id===items))
-            if(itemInfo){
-              itemInfo.size = item
-              itemInfo.quantity = cartItems[items][item]
-              orderItems.push(itemInfo)
-            }
+      let orderItems = [];
+      for (const productId in cartItems) {
+        if (cartItems[productId]) {
+          for (const size in cartItems[productId]) {
+            console.log("Size:", size); // Log each size
+            const quantity = cartItems[productId][size];
+            console.log("Quantity:", quantity); // Log the quantity
+  
+            if (quantity > 0) {
+              const itemInfo = structuredClone(
+                products.find((product) => product._id === productId)
+              );
+  
+              if (itemInfo) {
+                itemInfo.size = size; // Assign the size
+                itemInfo.quantity = quantity; // Assign the quantity
+                orderItems.push(itemInfo);
+              }
             }
           }
         }
-        let orderData = {
-          address:formData,
-          items:orderItems,
-          amount: getCartAmmount() + delivery_fee
-        }
-        switch(method){
-          case 'cod':
-            const response = await axios.post(backendUrl+'/api/order/place',orderData,{headers:{token}})
-             
-            if(response.data.success){
-              setCartItems({})
-              navigate('/order')
-              
-            }
-            else{
-              toast.error(response.data.message)
-            }
-            break;
-
-          default:
-            break;
-        }
-      }catch (error) {
-      console.log(error);
-      toast.error(error.message)
-
+      }
+  
+      let orderData = {
+        address: formData,
+        items: orderItems,
+        ammount: getCartAmmount() + delivery_fee,
+      };
+      
+  
+      switch (method) {
+        case "cod":
+          const response = await axios.post(
+            `${backendUrl}/api/order/place`,
+            orderData,
+            { headers: { token } }
+          );
+  
+          if (response.data.success) {
+            toast.success(response.data.message)
+            setCartItems({});
+            navigate("/order");
+          } else {
+            toast.error(response.data.message);
+          }
+          break;
+  
+        default:
+          break;
+      }
+    } catch (error) {
+      
+      toast.error(error.message);
     }
-  }
+  };
+  
   return (
     <form onSubmit={onSubmitHandler} className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh]' >
       

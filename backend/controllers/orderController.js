@@ -5,13 +5,13 @@ import userModel from '../models/userModel.js'
 // placing order using cod
 const placeOrder = async (req,res)=>{
     try {
-        const { userId, items, amount, address } = req.body;
+        const { userId, items, ammount, address } = req.body;
 
         const orderData = {
             userId,
             items,
             address,
-            amount,
+            ammount,
             paymentMethod: "COD",
             payment: false,
             date: Date.now(),
@@ -42,7 +42,12 @@ const placeOrderRazorpay = async (req,res)=>{
 
 //all order data for admin pannel
 const allOrders = async (req,res)=>{
-
+    try {
+        const orders = await orderModel.find({})
+        res.json({success:true,orders})
+    } catch (error) {
+        res.json({success:false, message:error.message})
+    }
 }
 
 //user order fronted
@@ -51,7 +56,7 @@ const userOrders = async (req,res)=>{
         const {userId}= req.body
 
         const orders = await  orderModel.find({userId})
-        res.json({success:true},orders)
+        res.json({success:true,orders})
     } catch (error) {
         console.log(error);
         res.json({success:false,message:error.message})
@@ -60,7 +65,15 @@ const userOrders = async (req,res)=>{
 
 //update status
 const updateStatus = async (req,res)=>{
-
+    try {
+        const {orderId,status} = req.body;
+        await orderModel.findByIdAndUpdate(orderId,{status})
+        
+        res.json({success:true, message:'Status Updated'});
+    } catch (error) {
+        console.log(error);
+        res.json({success:false,message:error.message})
+    }
 }
 
 export {placeOrder,placeOrderRazorpay,placeOrderStripe,allOrders,userOrders,updateStatus}
