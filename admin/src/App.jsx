@@ -5,11 +5,14 @@ import { Route,Routes } from 'react-router-dom'
 import Add from './pages/Add'
 import List from './pages/List'
 import Orders from './pages/Orders'
+import Analytics from './pages/analytics'
 import Login from './component/login'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
+export const fastapiURL = import.meta.env.VITE_FASTAPI_URL
+
 export const currency = "$"
 const App = () => {
 
@@ -34,6 +37,7 @@ const App = () => {
           <Route path='/add' element={<Add token={token} />} />
           <Route path='/list' element={<List token={token} />} />
           <Route path='/orders' element={<Orders token={token} />} />
+          <Route path='/analytics' element={<Analytics token={token}/>} />
           
         </Routes>
       </div>

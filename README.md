@@ -39,3 +39,22 @@ This project is a complete e-commerce solution comprising a **frontend**, **back
     -   View and handle customer inquiries.
 -   Technologies:
     -   React.js, Redux, Ant Design (for UI components).
+
+
+### **FastAPI and Matplotlib Integration**
+
+- FastAPI is used to build additional API endpoints for analytics and data visualization.
+
+- Matplotlib is leveraged to generate dynamic graphs and insights based on sales data.
+
+- Features:
+
+    - Fetch sales data and generate visual reports.
+
+    - Provide RESTful APIs for retrieving analytics in JSON or image format.
+
+    - Easily integrate with the frontend to display graphs and statistics.
+
+- Technologies:
+
+    - FastAPI, Matplotlib
