@@ -9,7 +9,6 @@ import jwt
 from database import get_client
 from visualization import Visualize
 import base64
-from io import BytesIO
 from bson import ObjectId
 
 get_graph = Visualize()
