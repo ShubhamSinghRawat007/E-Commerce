@@ -3,11 +3,13 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { fastapiURL } from '../App'
 import { backendUrl } from '../App'
-import RightSidebar from '../component/ChartBar'
+import SecondaryNavbar from '../component/ChartBar'
+import {assets} from '../assets/assets'
 
 const Analytics = ({token}) => {
 
     const [charts, setList] = useState([])
+    const [active, setActive] = useState("")
 
     const fetchAllCharts = async()=>{
         try {
@@ -41,6 +43,7 @@ const Analytics = ({token}) => {
         }else{
         toast.error(response.data.message)
         }
+        setActive(id)
     } catch (error) {
         toast.error(error.message)
         
@@ -54,11 +57,14 @@ const Analytics = ({token}) => {
 
   return (
     <>
-    <RightSidebar charts={charts} getChart={getChart}/>
+    <SecondaryNavbar charts={charts} getChart={getChart} active={active}/>
     <div className="container mx-auto px-4 height-100 width-100">
     <h2 className="text-center text-2xl font-bold mb-6">Analytics Dashboard</h2>
     <div className="flex flex-wrap -mx-4" id="analytics">
-      <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 prata-regular text-3xl sm:py-3 lg:text-5xl leading-relaxed">Visualize<br/>the Business</h1>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center gap-4">
+      <span className="prata-regular text-3xl sm:py-3 lg:text-5xl leading-relaxed"><span className="prata-regular text-8xl sm:py-3 lg:text-7xl leading-relaxed">V</span>isualize<br/>the <span className="prata-regular text-8xl sm:py-3 lg:text-7xl leading-relaxed">B</span>usiness</span>
+      <img src={assets.insights}/>
+      </div>
     </div>
 
     </div>
