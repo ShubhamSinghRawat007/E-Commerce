@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary"
 import { json } from "express"
 import productModel from "../models/productModel.js"
+import productlogsModel from "../models/productlogsModel.js"
 
 //Add product
 const addProduct = async (req,res)=>{
@@ -38,6 +39,11 @@ const addProduct = async (req,res)=>{
         const product = new productModel(productData)
         await product.save()
         
+        const productaddlogs = new productlogsModel({
+            productId:product._id,
+            date:Date.now()
+        })
+        await productaddlogs.save()
        
         res.json({success:true,message:"product added"})
         
