@@ -10,6 +10,7 @@ from database import get_client
 from visualization import Visualize
 import base64
 from bson import ObjectId
+import pandas as pd
 
 get_graph = Visualize()
 
@@ -49,7 +50,7 @@ def visualize(request: requests.Request, data: dict):
         raise HTTPException(status_code=401, detail="Not Authorized")
 
     data = {"_id": ObjectId(data["_id"])}# convert the id to ObjectId
-
+    
     match(conn.test.charts.find_one(data)['name']):
         case "Order Status":
             statuses = conn.test.orders.distinct("status")
@@ -68,10 +69,24 @@ def visualize(request: requests.Request, data: dict):
 
             return JSONResponse(content={"success": True, "message": "loading", "image": img_base64, "data": {"statuses": statuses, "values": values}})
         case "Geographical Distribution":
-            states = conn.test.orders.distinct("address.state")
-            values = []
-            for state in states:
-                values.append(conn.test.orders.count_documents({"address.state": state}))
+
+            states = conn.test.orders.aggregate([
+                {"$group": {
+                    "_id": {"$toLower":"$address.state"},
+                    "totalOrders": {"$sum": 1}
+                }},
+                {"$project": {
+                    "_id": 0,
+                    "state": "$_id",
+                    "totalOrders": 1
+                }}
+            ])
+
+            states = pd.DataFrame(states.to_list())
+
+            values = states["totalOrders"]
+            states = states["state"]
+
             graph = get_graph.generate_state_order_distribution_graph(states, values)
 
             graph.seek(0)
@@ -80,10 +95,44 @@ def visualize(request: requests.Request, data: dict):
 
             img_base64 = base64.b64encode(img_bytes).decode("utf-8")
 
-            return JSONResponse(content={"success": True, "message": "loading", "image": img_base64, "data": {"states": states, "count": values}})
+            return JSONResponse(content={"success": True, "message": "loading", "image": img_base64, "data": {"states": states.to_list(), "count": values.to_list()}})
+        
+        case "Revenue Over Time":
 
+            revenue = conn.test.orders.aggregate([
+                {"$group": {
+                    "_id": "$date",
+                    "totalRevenue": {"$sum": "$ammount"}
+                }},
+                {"$addFields": {
+                    "date": {"$toDate": "$_id"}
+                }},
+                {"$sort": {
+                    "date": 1
+                }},
+                {"$project": {
+                    "date": {"$dateToString": {"format": "%Y-%m-%d", "date": "$date"}},
+                    "totalRevenue": 1
+                }}
+                ])
+
+            revenue = pd.DataFrame(revenue.to_list())
+            dates = revenue["date"]
+            total = revenue["totalRevenue"]
+            
+            print(dates, total)
+            graph = get_graph.generate_revenue_overtime_graph(dates, total)
+
+            graph.seek(0)
+
+            img_bytes = graph.getvalue()
+
+            img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+
+            return JSONResponse(content={"success": True, "message": "loading", "image": img_base64, "data": {"dates": list(dates), "revenue": list(total)}})
+        
         case _:
-            return {"success": False, "message": "Invalid Visualization Type"}
+            return {"success": False, "message": "Invalid Visualization Type"+"-"+conn.test.charts.find_one(data)['name']}
         
 @app.post("/addchart")
 def add_chart(request: requests.Request, data: dict):
