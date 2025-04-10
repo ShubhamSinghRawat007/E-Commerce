@@ -133,7 +133,50 @@ def visualize(request: requests.Request, data: dict):
         
         case _:
             return {"success": False, "message": "Invalid Visualization Type"+"-"+conn.test.charts.find_one(data)['name']}
-        
+
+@app.post("/insights")
+def insights(request: requests.Request, data: dict):
+
+    total_revenue = conn.test.orders.aggregate([
+        {"$group": {
+            "_id": None,
+            "totalRevenue": {"$sum": "$ammount"}
+        }}
+    ])
+    total_revenue = list(total_revenue)[0]["totalRevenue"] if total_revenue else 0
+
+    total_orders = conn.test.orders.count_documents({})
+    total_orders = total_orders if total_orders else 0
+
+    total_users = conn.test.users.count_documents({})
+    total_users = total_users if total_users else 0
+
+    avg_order_value = total_revenue/total_orders if total_orders > 0 else 0
+    avg_order_value = round(avg_order_value, 2)
+
+    repert_customers = conn.test.orders.aggregate([
+        {"$group": {
+            "_id": "$user_id",
+            "totalOrders": {"$sum": 1}
+        }},
+        {"$match": {
+            "totalOrders": {"$gt": 1}
+        }}
+    ])
+    repert_customers = len(list(repert_customers))
+
+    pending_orders = conn.test.orders.count_documents({"status": "Order Placed"})
+    pending_orders = pending_orders if pending_orders else 0
+
+    data_insights = [{"emoji_decimal": "💸", "title": "Total Revenue", "value": f"$ {total_revenue}"},
+                     {"emoji_decimal": "📦", "title": "Total Orders", "value": total_orders},
+                     {"emoji_decimal": "🦸‍♂️", "title": "Total Users", "value": total_users},
+                     {"emoji_decimal": "🛒", "title": "Average Order Value", "value": f"$ {avg_order_value}"},
+                     {"emoji_decimal": "🔁", "title": "Repetitive Customers", "value": repert_customers},{"emoji_decimal": "🚚", "title": "Pending Orders", "value": pending_orders}
+    ]
+
+    return {"success": True, "insights":data_insights, "message": "Insights loaded successfully"}
+
 @app.post("/addchart")
 def add_chart(request: requests.Request, data: dict):
     conn.test.charts.insert_one(data)

@@ -5,7 +5,8 @@ import upload_area from './upload_area.png'
 import parcel_icon from './parcel_icon.svg'
 import analytics_icon from './analytics_icon.png'
 import insights from './insights.png'
-
+import home_icon from './home.png'
+import list_icon from './list_icon.png'
 export const assets = {
     logo,
     add_icon,
@@ -13,6 +14,8 @@ export const assets = {
     upload_area,
     parcel_icon,
     analytics_icon,
-    insights
+    insights,
+    home_icon,
+    list_icon
 }
 
