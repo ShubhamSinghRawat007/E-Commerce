@@ -55,7 +55,7 @@ class Visualize:
         
     @staticmethod
     def generate_order_status_graph(statuses: list, values: list) -> BytesIO:
-
+        plt.figure(figsize=(10, 5))
         plt.pie(values, labels=statuses, autopct='%1.1f%%', startangle=140, wedgeprops={'width': 0.65})
         plt.title('Order Status Distribution')
         plt.legend(loc='best', bbox_to_anchor=(1, 1))
@@ -147,5 +147,18 @@ class Visualize:
         plt.close()
         return img
 
+    @staticmethod
+    def payment_method_breakdown_graph(methods: list, count: list):
+        plt.figure(figsize=(10, 5))
+        plt.pie(count, labels=methods, autopct='%1.1f%%', startangle=140, wedgeprops={'width': 0.65})
+        plt.legend(loc='best', bbox_to_anchor=(1, 1))
+        plt.gcf().set_facecolor('none')
+        plt.title('Payment Method Breakdown')
+        img = BytesIO()
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plt.close()
+        return img
+    
 if __name__ == "__main__":
     ...

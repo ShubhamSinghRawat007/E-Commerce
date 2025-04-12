@@ -120,7 +120,6 @@ def visualize(request: requests.Request, data: dict):
             dates = revenue["date"]
             total = revenue["totalRevenue"]
             
-            print(dates, total)
             graph = get_graph.generate_revenue_overtime_graph(dates, total)
 
             graph.seek(0)
@@ -131,6 +130,35 @@ def visualize(request: requests.Request, data: dict):
 
             return JSONResponse(content={"success": True, "message": "loading", "image": img_base64, "data": {"dates": list(dates), "revenue": list(total)}})
         
+        case "Payment Method Breakdown":
+
+            payment_methods = conn.test.orders.aggregate([
+                {"$group": {
+                    "_id": "$paymentMethod",
+                    "totalOrders": {"$sum": 1}
+                }},
+                {"$project": {
+                    "_id": 0,
+                    "payment_method": "$_id",
+                    "totalOrders": 1
+                }}
+            ])
+
+            payment_methods = pd.DataFrame(payment_methods.to_list())
+
+            print(payment_methods)
+            values = payment_methods["totalOrders"]
+            payment_methods = payment_methods["payment_method"]
+
+
+            graph = get_graph.payment_method_breakdown_graph(payment_methods, values)
+            graph.seek(0)
+            
+            img_bytes = graph.getvalue()
+            img_base64 =  base64.b64encode(img_bytes).decode("utf-8")
+
+            return JSONResponse(content={"success": True, "message": "loading", "image": img_base64, "data": {"payment_method": list(payment_methods), "count": list(values)}})
+
         case _:
             return {"success": False, "message": "Invalid Visualization Type"+"-"+conn.test.charts.find_one(data)['name']}
 
