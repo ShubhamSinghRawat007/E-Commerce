@@ -34,22 +34,10 @@ app.add_middleware(
 
 
 @app.post("/visualize")
-def visualize(request: requests.Request, data: dict):
-    # token authentication process
-    token = request.headers.get("Authorization")
-
-    if not token or not token.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Token missing or invalid")
-    
-    token = token.split(" ")[1]
-    try:
-        token_decode = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms= [os.getenv("JWT_ALGORITHM")])
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token has expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    except Exception:
-        raise HTTPException(status_code=401, detail="Not Authorized")
+def visualize(data: dict, user_data: dict = Depends(verify_token)):
+    """
+    Visualize the data based on the type of chart requested.
+    """
 
     data = {"_id": ObjectId(data["_id"])}# convert the id to ObjectId
     
@@ -165,7 +153,7 @@ def visualize(request: requests.Request, data: dict):
             return {"success": False, "message": "Invalid Visualization Type"+"-"+conn.test.charts.find_one(data)['name']}
 
 @app.post("/insights")
-def insights(request: requests.Request, data: dict):
+def insights(data: dict, user_data: dict = Depends(verify_token)):
 
     total_revenue = conn.test.orders.aggregate([
         {"$group": {

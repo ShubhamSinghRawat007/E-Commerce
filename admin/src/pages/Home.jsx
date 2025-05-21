@@ -15,11 +15,9 @@ const Home = ({token}) => {
             if(!token){
                 return null
               }
-          const response = await axios.post(fastapiURL + '/insights/', {headers:{token}})
+          const response = await axios.post(fastapiURL + '/insights/',{}, { headers: { Authorization: `Bearer ${token}` }  })
           
           if(response.data.success){
-            console.log(response.data.insights)
-            console.log(typeof(response.data.insights))
             setList(response.data.insights)
           }else{
             toast.error(response.data.message)
