@@ -9,7 +9,7 @@ import produtRouter from './routes/productRoute.js'
 import cartRouter from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
 import chartsRouter from './routes/chartsRoute.js'
-
+import insightsRouter from './routes/insightsRoute.js'
 
 //aapp config
 
@@ -28,6 +28,7 @@ app.use('/api/product',produtRouter)
 app.use('/api/cart',cartRouter)
 app.use('/api/order',orderRouter)
 app.use('/api/charts',chartsRouter)
+app.use('/api/insights',insightsRouter)
 
 app.get('/',(req,res)=>{
     res.send("API working")

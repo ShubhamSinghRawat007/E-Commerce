@@ -35,8 +35,11 @@ fake = Faker()
 def current_time_ms():
     return int(time.time() * 1000)
 
+
 def generate_users_and_orders(user_count=50):
-    products = list(product_collection.find({}, {"_id": 1}))
+
+    products = list(product_collection.find({}))
+
     if not products:
         print("No products found in the product collection. Add products first.")
         return
@@ -50,11 +53,10 @@ def generate_users_and_orders(user_count=50):
             "cartData": {},
         }
         user_id = user_collection.insert_one(user).inserted_id
-
         # Create 1–3 orders per user
         for _ in range(random.randint(1, 3)):
             selected_products = random.sample(products, random.randint(1, 4))
-            items = [{"productId": str(p["_id"]), "quantity": random.randint(1, 5)} for p in selected_products]
+            items = [p | {"quantity": random.randint(1, 5), "_id": str(p["_id"])} for p in selected_products]
             amount = sum(item["quantity"] * random.randint(100, 2000) for item in items)
 
             order = {
@@ -77,5 +79,16 @@ def generate_users_and_orders(user_count=50):
 
     print(f"Inserted {user_count} users and their orders.")
 
+
+def delete_all_orders():
+    order_collection.delete_many({})
+    print("Deleted all orders.")
+
+def delete_all_users():
+    user_collection.delete_many({})
+    print("Deleted all users.")
+
+# delete_all_orders()
+# delete_all_users()
 # Run the generator
 generate_users_and_orders(user_count=50)

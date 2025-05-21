@@ -28,6 +28,12 @@ const Sidebar = () => {
                <img src={assets.analytics_icon} className='' alt="" /> 
                <p className='hidden md:block' >Analytics</p>
             </NavLink>
+
+            <NavLink className="flex items-center gap-3 border-gray-300 border-r-0 border px-3 py-2 rounded-l " to='/insights'>
+               <img src={assets.insights_icon} className='' alt="" />
+               <p className='hidden md:block' >Insights</p>
+            </NavLink>
+
         </div>
     </div>
   )

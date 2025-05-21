@@ -1,6 +1,6 @@
 from typing import Union
 from dotenv import load_dotenv
-from fastapi import FastAPI, requests, HTTPException
+from fastapi import FastAPI, requests, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pathlib import Path
@@ -11,6 +11,8 @@ from visualization import Visualize
 import base64
 from bson import ObjectId
 import pandas as pd
+from bson.objectid import ObjectId
+from authentication import verify_token
 
 get_graph = Visualize()
 
@@ -184,7 +186,7 @@ def insights(request: requests.Request, data: dict):
 
     repert_customers = conn.test.orders.aggregate([
         {"$group": {
-            "_id": "$user_id",
+            "_id": "$userId",
             "totalOrders": {"$sum": 1}
         }},
         {"$match": {
@@ -205,6 +207,132 @@ def insights(request: requests.Request, data: dict):
 
     return {"success": True, "insights":data_insights, "message": "Insights loaded successfully"}
 
+@app.post("/insights-data")
+def insights_data(data: dict, user_data: dict = Depends(verify_token)):
+    
+    data = {"_id": ObjectId(data["_id"])}
+
+    def convertId_tostr(x: dict) -> dict:
+                if "_id" in x:
+                    x["_id"] = str(x["_id"])
+                return x
+    
+    match(conn.test.insights.find_one(data)['name']):
+        case "Top Selling Products":
+            products = conn.test.orders.aggregate([
+                {"$unwind": "$items"},
+                {"$group": {
+                    "_id": "$items._id",
+                    "productName": {"$first": "$items.name"},
+                    "productImage": {"$first": "$items.image"},
+                    "productCategory": {"$first": "$items.category"},
+                    "productPrice": {"$first": "$items.price"},
+                    "productSubCategory": {"$first": "$items.subCategory"},
+                    "isBestSeller": {"$first": "$items.bestSeller"},
+                    "productDescription": {"$first": "$items.description"},
+                    "totalSold": {"$sum": "$items.quantity"},
+                    "totalRevenue": {"$sum": {"$multiply": ["$items.price", "$items.quantity"]}}
+                }},
+                {
+                    "$project": {
+                        "_id": 0
+                    }
+                },
+                {"$sort": {
+                    "totalSold": -1
+                }}
+            ])
+
+            products = pd.DataFrame(products.to_list())
+
+            return JSONResponse(content={"success": True, "message": "loading", "data": products.to_dict(orient="records")})
+        
+        case "Top Payment Methods":
+            payment_methods = conn.test.orders.aggregate([
+                {"$group": {
+                    "_id": "$paymentMethod",
+                    "totalOrders": {"$sum": 1}
+                }},
+                {"$project": {
+                    "_id": 0,
+                    "payment_method": "$_id",
+                    "totalOrders": 1
+                }},
+                {"$sort": {
+                    "totalOrders": -1
+                }}
+            ])
+
+            payment_methods = pd.DataFrame(payment_methods.to_list())
+            payment_methods = payment_methods.head(10)
+
+            return JSONResponse(content={"success": True, "message": "loading", "data": payment_methods.to_dict(orient="records")})
+        
+        case "Top Selling Categories":
+            categories = conn.test.orders.aggregate([
+                {"$unwind": "$items"},
+                {"$group": {"_id": "$items.category", "totalSold": {"$sum": "$items.quantity"}}},
+                {"$sort": {
+                    "totalSold": -1
+                }}
+            ])
+
+            categories = pd.DataFrame(categories.to_list())
+            categories = categories.head(10)
+            print(categories)
+            return JSONResponse(content={"success": True, "message": "loading", "data": categories.to_dict(orient="records")})
+        
+        case "Customer Lifetime Value":
+            customers = conn.test.orders.aggregate([
+                {"$group": {
+                    "_id": { "$toObjectId": "$userId" },
+                    "totalSpent": {"$sum": "$ammount"}
+                }},
+                {"$lookup": {
+                    "from": "users",
+                    "localField": "_id",
+                    "foreignField": "_id",
+                    "as": "user"
+                }},
+                {"$unwind": "$user"},
+                {"$project": {
+                    "_id": 0,
+                    "customerName": "$user.name",
+                    "customerEmail": "$user.email",
+
+                    "totalSpent": 1
+                }},
+                {"$sort": {
+                    "totalSpent": -1
+                }}
+            ])
+
+            customers = pd.DataFrame(customers.to_list())
+            customers = customers.head(10)
+            return JSONResponse(content={"success": True, "message": "loading", "data": customers.to_dict(orient="records")})
+        
+        case "Customer Retention Rate":
+            returning_customers = conn.test.orders.aggregate([
+                {"$group": {
+                    "_id": "$userId",
+                    "totalOrders": {"$sum": 1}
+                }},
+                {"$match": {
+                    "totalOrders": {"$gt": 1}
+                }}
+            ])
+
+            returning_customers_count = len(list(returning_customers))
+            total_customers = conn.test.users.count_documents({})
+            retention_rate = (returning_customers_count / total_customers) * 100 if total_customers > 0 else 0
+            retention_rate = round(retention_rate, 2)
+            data = {"retention_rate": f"{retention_rate}%", "total_customers": total_customers, "returning_customers": returning_customers_count}
+            
+            return JSONResponse(content={"success": True, "message": "loading", "data": [data]})
+        
+        case "_":
+            return JSONResponse(content={"success": False, "message": "Invalid Type"})
+
 @app.post("/addchart")
 def add_chart(request: requests.Request, data: dict):
     conn.test.charts.insert_one(data)
@@ -215,3 +343,12 @@ def delete_chart(request: requests.Request, data: dict):
     conn.test.charts.delete_one(data)
     return {"success": True, "message": "Chart deleted successfully"}
 
+@app.post("/addinsights")
+def add_insights(request: requests.Request, data: dict):
+    conn.test.insights.insert_one(data)
+    return {"success": True, "message": "Insights added successfully"}
+
+@app.delete("/deleteinsights")
+def delete_insights(request: requests.Request, data: dict):
+    conn.test.insights.delete_one(data)
+    return {"success": True, "message": "Insights deleted successfully"}

@@ -1,77 +1,79 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { toast } from 'react-toastify'
-import { fastapiURL } from '../App'
-import { backendUrl } from '../App'
-import SecondaryNavbar from '../component/ChartBar'
-import {assets} from '../assets/assets'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { fastapiURL, backendUrl } from '../App';
+import SecondaryNavbar from '../component/ChartBar';
+import { assets } from '../assets/assets';
+import ChartDataTable from '../component/ChartDataTable';
 
-const Analytics = ({token}) => {
+const Analytics = ({ token }) => {
+  const [charts, setCharts] = useState([]);
+  const [active, setActive] = useState('');
+  const [chartImage, setChartImage] = useState('');
+  const [chartData, setChartData] = useState([]);
 
-    const [charts, setList] = useState([])
-    const [active, setActive] = useState("")
-
-    const fetchAllCharts = async()=>{
-        try {
-            if(!token){
-                return null
-              }
-          const response = await axios.get(backendUrl + '/api/charts/all', {headers:{token}})
-          
-          if(response.data.success){
-            setList(response.data.charts)
-          }else{
-            toast.error(response.data.message)
-          }
-        } catch (error) {
-          toast.error(error.message)
-          
-        }
-      }
-
-    const getChart = async (id)=>{
+  const fetchAllCharts = async () => {
     try {
-
-        const response = await axios.post(fastapiURL + '/visualize', {_id: id} ,{headers:{"Authorization": `Bearer ${token}`}})
-        
-        if(response.data.success){
-        const imgTag = document.createElement("img");
-        imgTag.src = "data:image/jpeg;base64," + response.data.image;  // Use Base64 data
-        let mycomponent = document.getElementById("analytics")
-        mycomponent.innerHTML= "";
-        mycomponent.appendChild(imgTag);
-        }else{
-        toast.error(response.data.message)
-        }
-        setActive(id)
+      if (!token) return;
+      const response = await axios.get(`${backendUrl}/api/charts/all`, { headers: { token } });
+      if (response.data.success) {
+        setCharts(response.data.charts);
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-        toast.error(error.message)
-        
+      toast.error(error.message);
     }
-    }
+  };
 
-    useEffect(()=>{
-        fetchAllCharts()
-      },[])
-    
+  const getChart = async (id) => {
+    try {
+      const response = await axios.post(
+        `${fastapiURL}/visualize`,
+        { _id: id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+
+        setChartImage("data:image/jpeg;base64," + response.data.image);
+        setChartData(response.data.data || []); // Optional: if you return structured data too
+        toast.success("Visualization loaded");
+        
+      } else {
+        toast.error(response.data.message);
+      }
+      setActive(id);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllCharts();
+  }, []);
 
   return (
     <>
-    <SecondaryNavbar charts={charts} getChart={getChart} active={active}/>
-    <div className="container mx-auto px-4 height-100 width-100">
-    <h2 className="text-center text-2xl font-bold mb-6">Analytics Dashboard</h2>
-    <div className="flex flex-wrap -mx-4" id="analytics">
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center gap-4">
-      <span className="prata-regular text-3xl sm:py-3 lg:text-5xl leading-relaxed"><span className="prata-regular text-8xl sm:py-3 lg:text-7xl leading-relaxed">V</span>isualize<br/>the <span className="prata-regular text-8xl sm:py-3 lg:text-7xl leading-relaxed">B</span>usiness</span>
-      <img src={assets.insights}/>
+      <SecondaryNavbar charts={charts} getChart={getChart} active={active} />
+      <div className="container mx-auto px-4">
+        <h2 className="text-center text-2xl font-bold mb-6">Analytics Dashboard</h2>
+
+        {!chartImage ? (
+          <div className="flex justify-center items-center h-96">
+            <div className="text-center">
+              <h3 className="text-3xl lg:text-5xl font-semibold mb-4">Visualize the Business</h3>
+              <img src={assets.insights} alt="Insights" className="mx-auto max-w-sm" />
+            </div>
+          </div>
+        ) : (
+          <div className="text-center">
+            <img src={chartImage} alt="Chart" className="mx-auto max-w-2xl mb-6" />
+            <ChartDataTable chartData={chartData} />
+          </div>
+        )}
       </div>
-    </div>
-
-    </div>
-
-
     </>
-    )
-}
+  );
+};
 
 export default Analytics;

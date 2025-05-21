@@ -7,6 +7,8 @@ import analytics_icon from './analytics_icon.png'
 import insights from './insights.png'
 import home_icon from './home.png'
 import list_icon from './list_icon.png'
+import insights_icon from './insights_icon.png'
+
 export const assets = {
     logo,
     add_icon,
@@ -16,6 +18,7 @@ export const assets = {
     analytics_icon,
     insights,
     home_icon,
-    list_icon
+    list_icon,
+    insights_icon
 }
 
