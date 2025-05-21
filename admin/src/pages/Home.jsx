@@ -12,6 +12,7 @@ const Home = ({token}) => {
 
     const fetchAllInsights = async()=>{
         try {
+          console.log(token)
             if(!token){
                 return null
               }
