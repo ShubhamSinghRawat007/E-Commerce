@@ -39,9 +39,7 @@ const PlaceOrder = () => {
       for (const productId in cartItems) {
         if (cartItems[productId]) {
           for (const size in cartItems[productId]) {
-            console.log("Size:", size); // Log each size
             const quantity = cartItems[productId][size];
-            console.log("Quantity:", quantity); // Log the quantity
   
             if (quantity > 0) {
               const itemInfo = structuredClone(

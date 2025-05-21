@@ -1,11 +1,9 @@
-from typing import Union
 from dotenv import load_dotenv
-from fastapi import FastAPI, requests, HTTPException, Depends
+from fastapi import FastAPI, requests, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pathlib import Path
 import os
-import jwt
 from database import get_client
 from visualization import Visualize
 import base64
@@ -136,7 +134,6 @@ def visualize(data: dict, user_data: dict = Depends(verify_token)):
 
             payment_methods = pd.DataFrame(payment_methods.to_list())
 
-            print(payment_methods)
             values = payment_methods["totalOrders"]
             payment_methods = payment_methods["payment_method"]
 
@@ -267,7 +264,7 @@ def insights_data(data: dict, user_data: dict = Depends(verify_token)):
 
             categories = pd.DataFrame(categories.to_list())
             categories = categories.head(10)
-            print(categories)
+
             return JSONResponse(content={"success": True, "message": "loading", "data": categories.to_dict(orient="records")})
         
         case "Customer Lifetime Value":

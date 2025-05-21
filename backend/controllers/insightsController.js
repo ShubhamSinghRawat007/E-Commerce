@@ -6,7 +6,6 @@ const fetchInsights = async (req, res) => {
         const insights = await insightsModel.find({});
         res.json({ success: true, insights });
     } catch (error) {
-        console.log(error);
         res.json({ success: false, message: error.message });
     }
 };

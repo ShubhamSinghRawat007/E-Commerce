@@ -29,8 +29,6 @@ const ShopContextProvider = (props)=>{
         }
 
         let cartData = structuredClone(cartItems) 
-        // toast.error('Select product size')
-        // console.log(cartData);
 
         if(cartData[itemId]){
             if(cartData[itemId][size]){
@@ -56,7 +54,6 @@ const ShopContextProvider = (props)=>{
                   toast.success(res.data.message);
                   
             } catch (error) {
-                console.log(error);
                 toast.error(error.message)
                 
             }
@@ -88,7 +85,6 @@ const ShopContextProvider = (props)=>{
             try {
                 await axios.post(backendUrl+'/api/cart/update',{itemId, size , quantity},{headers:{token}})
             } catch (error) {
-                console.log(error);
                 toast.error(error.message)
                 
             }
@@ -123,7 +119,6 @@ const ShopContextProvider = (props)=>{
             }
             
         } catch (error) {
-            console.log(error);
             toast.error(error.message)
         }
     }
@@ -135,7 +130,6 @@ const ShopContextProvider = (props)=>{
                 setCartItems(response.data.cartData)
             }
         } catch (error) {
-            console.log(error);
             toast.error(error.message)
         }
     }

@@ -25,7 +25,6 @@ const  loginUser = async (req,res)=>{
         }
 
      } catch (error) {
-        console.log(error);
         res.json({success:false, message:error.message})
      }
 }
@@ -65,7 +64,6 @@ const registerUser = async (req,res)=>{
         res.json({success:true,token})
 
     }catch(error){
-        console.log(error);
         res.json({success:false, message:error.message})
         
     }
@@ -87,7 +85,6 @@ const adminLogin = async (req,res)=>{
             res.json({success:false,message:"Invalid Credential"})
         }
     } catch (error) {
-        console.log(error);
         res.json({success:false, message:error.message})
     }
 }
