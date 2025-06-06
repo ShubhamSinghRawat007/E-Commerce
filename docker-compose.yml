@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  admin:
+    build: ./admin
+    ports:
+      - "3001:5174"
+    volumes:
+      - ./admin:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - NODE_ENV=development
+
+  visualization:
+    build:
+      context: .
+      dockerfile: visualization/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./visualization:/app/visualization
+      - ./backend/.env:/app/backend/.env
