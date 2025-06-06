@@ -8,7 +8,7 @@ import Orders from './pages/Orders'
 import Analytics from './pages/Analytics'
 import Insights from './pages/Insights'
 import Home from './pages/Home'
-import Login from './component/login'
+import Login from './component/Login'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

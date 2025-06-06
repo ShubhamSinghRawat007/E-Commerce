@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3
 
 # Create backend directory and copy only the .env file
 RUN mkdir -p /app/backend
