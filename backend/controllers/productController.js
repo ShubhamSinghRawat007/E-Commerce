@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary"
 import { json } from "express"
 import productModel from "../models/productModel.js"
+import productlogsModel from "../models/productlogsModel.js"
 
 //Add product
 const addProduct = async (req,res)=>{
@@ -34,16 +35,19 @@ const addProduct = async (req,res)=>{
             image: imagesUrl,
             date:Date.now()
         }
-        console.log(productData,sizes);
         const product = new productModel(productData)
         await product.save()
         
+        const productaddlogs = new productlogsModel({
+            productId:product._id,
+            date:Date.now()
+        })
+        await productaddlogs.save()
        
         res.json({success:true,message:"product added"})
         
         
     } catch (error) {
-        console.log(error)
         res.json({success:false,message:error.message})
 
     }
@@ -55,7 +59,6 @@ const listProduct = async (req,res)=>{
         const products =await productModel.find({})
         res.json({success:true,products})
     } catch (error) {
-        console.log(error);
         res.json({success:false,products})
     }
 }
@@ -66,7 +69,6 @@ const removeProduct = async (req,res)=>{
         await productModel.findByIdAndDelete(req.body.id)
         res.json({success:true,message:"product removed"})
     } catch (error) {
-        console.log(error);
         res.json({success:false,products})
     }
 }
@@ -78,7 +80,6 @@ const singleProduct = async (req,res)=>{
         const product = await productModel.findById(productId)
         res.json({success:true,product})
     } catch (error) {
-        console.log(error);
         res.json({success:false,products})
     }
 

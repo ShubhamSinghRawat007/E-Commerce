@@ -24,7 +24,6 @@ const placeOrder = async (req,res)=>{
 
         res.status(201).json({ success: true, message: 'Order placed successfully', order: newOrder });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 }
@@ -58,7 +57,6 @@ const userOrders = async (req,res)=>{
         const orders = await  orderModel.find({userId})
         res.json({success:true,orders})
     } catch (error) {
-        console.log(error);
         res.json({success:false,message:error.message})
     }
 }
@@ -71,7 +69,6 @@ const updateStatus = async (req,res)=>{
         
         res.json({success:true, message:'Status Updated'});
     } catch (error) {
-        console.log(error);
         res.json({success:false,message:error.message})
     }
 }

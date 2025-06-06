@@ -62,11 +62,17 @@ const List = ({token}) => {
       {
         list.map((item,index)=>(
           <div className='grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border text-sm ' key={index}>
-            <img className='w-full' src={item.image[0]} alt="" />
+            <div className="w-30 h-40 md:w-20 md:h-30 lg:w-44 lg:h-60 overflow-hidden flex justify-center items-center">
+              <img 
+                  className="w-full h-full object-cover" 
+                  src={item.image[0]} 
+                  alt={item.name} 
+              />
+            </div>
             <p>{item.name}</p> 
             <p>{item.category}</p> 
             <p>{currency}{item.price }</p> 
-            <p onClick={()=>removeProduct(item._id)} className='text-right md:text-center cursor-pointer text-lg' >X</p> 
+            <p onClick={()=>removeProduct(item._id)} className='text-right md:text-center cursor-pointer text-lg text-red-500' >remove</p> 
           </div>
         ))
       }
