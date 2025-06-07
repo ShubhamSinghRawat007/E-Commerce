@@ -1,14 +1,14 @@
-    # Dockerfile
-    FROM node:24
+# inside backend/Dockerfile
+FROM node:24
 
-    WORKDIR /app
+WORKDIR /app
 
-    COPY . .
-    
-    RUN ls
+COPY package*.json ./
 
-    RUN npm install
+RUN npm install
 
-    EXPOSE 4000
+COPY . .
 
-    CMD ["npm", "run", "server"]
+EXPOSE 4000
+
+CMD ["npm", "run", "start"]
