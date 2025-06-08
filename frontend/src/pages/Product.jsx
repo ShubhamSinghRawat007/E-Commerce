@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { assets, products } from '../assets/assets';
+import { assets } from '../assets/assets';
 import { ShopContext } from '../context/ShopContext';
 import RelatedProduct from '../component/RelatedProduct';
 

@@ -8,7 +8,7 @@ const SecondaryNavbar = ({charts, getChart, active}) => {
             {charts.map((chart, index)=>(
 
             <button key={index} className="flex items-center gap-3 px-3 py-2 " onClick={()=>getChart(chart._id)} >
-               <p className='hidden md:block' Style={active==chart._id?"color: #c586A5":""}>{chart.name}</p>
+               <p className='hidden md:block' Style={active==chart._id?"color:rgb(138, 97, 239)":""}>{chart.name}</p>
             </button>
 
             ))}
