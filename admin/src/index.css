@@ -8,11 +8,11 @@
     font-family: Outfit;
 }
 select,input,textarea{
-    border: 1px solid #c2c2c2;
-    outline-color:#c586A5 ;
+    border: 1px solid #a6c4e7;
+    outline-color:#531c9a ;
     border-radius: 4px;
 }
 .active{
-    background-color: #ffebf5;
-    border-color:#C586A5  ;
+    background-color: #a6c4e7;;
+    border-color:#531c9a  ;
 }
