@@ -60,16 +60,23 @@
 
 #### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/your-username/styleverse.git
-cd styleverse
+git clone https://github.com/ShubhamSinghRawat007/E-Commerce.git
+cd E-Commerce
 ```
 
 #### 2️⃣ Environment Variables
 - Create a `.env` file in the backend directory with:
 ```env
-PORT=5000
+PORT=4000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
+JWT_SECRET = your secret here
+JWT_ALGORITHM = "HS256"
+ADMIN_EMAIL = "admin@gmail.com"
+ADMIN_PASS = admin password
+CLOUDINARY_API_KEY= your key
+CLOUDINARY_SECRET_KEY = your key
+CLOUDINARY_NAME=your name
 ```
 
 - Create a `.env` file for FastAPI with MongoDB connection details as needed.
@@ -89,7 +96,7 @@ npm install
 
 - FastAPI (Analytics API):
 ```bash
-cd analytics
+cd visualization
 pip install -r requirements.txt
 ```
 
@@ -110,7 +117,7 @@ npm start
 ```
 - Start Analytics Server:
 ```bash
-cd analytics
+cd visualization
 uvicorn main:app --reload --port 8000
 ```
 
@@ -122,27 +129,6 @@ uvicorn main:app --reload --port 8000
 ```bash
 docker-compose up --build
 ```
-
-### 📝 Example `docker-compose.yml`
-```yaml
-version: "3.8"
-services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-  backend:
-    build: ./backend
-    ports:
-      - "5000:5000"
-    environment:
-      - MONGO_URI=your_mongodb_connection_string
-  analytics:
-    build: ./analytics
-    ports:
-      - "8000:8000"
-```
-
 ### 🚀 Docker Commands
 
 - **Build containers:**
@@ -165,7 +151,7 @@ docker-compose down
 /styleverse
 ├── backend       # Node.js Express backend
 ├── frontend      # React frontend
-├── analytics     # FastAPI data analytics API
+├── visualization     # FastAPI data analytics API
 ├── docker-compose.yml
 └── README.md
 ```
@@ -182,22 +168,6 @@ docker-compose down
 | Create Account       | ❌     | ✅    |
 | Place Orders         | ❌     | ✅    |
 | Track Orders         | ❌     | ✅    |
-
----
-
-## ⚔️ Challenges Faced
-- Integrating **FastAPI** with a **JavaScript-based stack**
-- Working with **MongoDB aggregation pipelines** for analytical queries
-- **Converting UI/UX from Figma to production-ready React components**
-- Handling **image uploads** over API calls
-- Configuring branding assets like **logo**
-- Handling **CORS** between React → Node → FastAPI
-
----
-
-## 📅 Timeline
-- **Development:** 3-4 months
-- **Deployment & DevOps Setup:** ~1 month
 
 ---
 
