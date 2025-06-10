@@ -1,60 +1,219 @@
-# E-Commerce Backend
+# STYLEVERSE - E-Commerce Web Application
 
-This project is a complete e-commerce solution comprising a **frontend**, **backend**, and **admin panel**. The system is designed to offer seamless order management, user authentication, and payment integrations.
+**STYLEVERSE** is a feature-rich, full-stack e-commerce web application for a clothing shop. It provides a seamless shopping experience for users and powerful business insights for admins. The platform integrates data analytics features to help the admin make informed decisions.
 
-* * *
+---
 
-## Overview
+## 🛍️ Features at a Glance
 
-### **Frontend**
+### 👤 **User Roles**
+- **Admin**
+  - Manage products (add/update/delete)
+  - Manage orders (view/update status)
+  - View powerful **data-driven analytics** on sales, products, and customers
+- **User**
+  - Sign up, log in, and log out
+  - Browse and purchase products
+  - Add products to cart
+  - Track their orders
 
--   Built using modern JavaScript frameworks like **React.js** for a dynamic and responsive user interface.
--   Features:
-    -   User authentication for login and signup.
-    -   Product browsing and searching.
-    -   Adding items to the cart and managing cart data.
-    -   Placing orders with multiple payment options.
-    -   Viewing order history.
--   Technologies:
-    -   React.js,  Material-UI (for responsive design).
+---
 
-### **Backend**
+## 🌐 Tech Stack
 
--   A robust and scalable backend API, built with **Node.js** and **Express.js**.
--   Responsible for:
-    -   Managing user authentication and authorization using **JWT**.
-    -   Handling product and order data through **MongoDB**.
-    -   Integrating with **Stripe** and **Razorpay** for secure payment processing.
-    -   Providing API endpoints for frontend and admin panel.
--   Technologies:
-    -   Node.js, Express.js, MongoDB (Mongoose), JWT, Razorpay, Stripe.
+| Layer        | Technology Used                            |
+| ------------ | ----------------------------------------- |
+| **Frontend** | React.js, CSS3, Figma (for UI/UX design)  |
+| **Backend**  | Node.js, Express.js                       |
+| **Analytics**| FastAPI (Python), Pandas, Matplotlib      |
+| **Database** | MongoDB (NoSQL)                           |
+| **DevOps**   | Docker, Docker Compose                    |
 
-### **Admin Panel**
+---
 
--   A separate interface for managing the e-commerce application, built using **React.js**.
--   Features:
-    -   Dashboard to view all orders, user data, and sales reports.
-    -   Ability to update order statuses (e.g., Pending, Shipped, Delivered).
-    -   Manage products: Add, edit, or delete items in the inventory.
-    -   View and handle customer inquiries.
--   Technologies:
-    -   React.js, Redux, Ant Design (for UI components).
+## 🎨 UI/UX Design
+- Designed with **Figma** ensuring vibrant colors and modern layouts
+- Best practices followed for accessibility and responsiveness
 
+---
 
-### **FastAPI and Matplotlib Integration**
+## 📊 Data Analytics
+- Built using **FastAPI** with:
+  - **Pandas** for data manipulation
+  - **MongoDB Aggregation Queries** for data insights
+  - **Matplotlib** for generating **visual analytics** like sales charts, top products, order trends, etc.
+- Data-driven APIs provide visualizations and insights for admins in real time
 
-- FastAPI is used to build additional API endpoints for analytics and data visualization.
+---
 
-- Matplotlib is leveraged to generate dynamic graphs and insights based on sales data.
+## ⚙️ Project Setup Instructions
 
-- Features:
+### 🖥️ Requirements
+- Node.js (>= 16.x recommended)
+- Python (>= 3.9)
+- MongoDB
+- Docker (recommended)
 
-    - Fetch sales data and generate visual reports.
+---
 
-    - Provide RESTful APIs for retrieving analytics in JSON or image format.
+### 📁 Local Development Setup
 
-    - Easily integrate with the frontend to display graphs and statistics.
+#### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/your-username/styleverse.git
+cd styleverse
+```
 
-- Technologies:
+#### 2️⃣ Environment Variables
+- Create a `.env` file in the backend directory with:
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+```
 
-    - FastAPI, Matplotlib
+- Create a `.env` file for FastAPI with MongoDB connection details as needed.
+
+#### 3️⃣ Install Dependencies
+- Backend:
+```bash
+cd backend
+npm install
+```
+
+- Frontend:
+```bash
+cd frontend
+npm install
+```
+
+- FastAPI (Analytics API):
+```bash
+cd analytics
+pip install -r requirements.txt
+```
+
+---
+
+### ▶️ Run Locally Without Docker
+
+- Start MongoDB (if not using Docker)
+- Start Backend:
+```bash
+cd backend
+npm run dev
+```
+- Start Frontend:
+```bash
+cd frontend
+npm start
+```
+- Start Analytics Server:
+```bash
+cd analytics
+uvicorn main:app --reload --port 8000
+```
+
+---
+
+## 📦 Docker Setup (Recommended)
+
+### 🐳 Using Docker Compose (Recommended)
+```bash
+docker-compose up --build
+```
+
+### 📝 Example `docker-compose.yml`
+```yaml
+version: "3.8"
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=your_mongodb_connection_string
+  analytics:
+    build: ./analytics
+    ports:
+      - "8000:8000"
+```
+
+### 🚀 Docker Commands
+
+- **Build containers:**
+```bash
+docker-compose build
+```
+- **Start containers:**
+```bash
+docker-compose up
+```
+- **Stop containers:**
+```bash
+docker-compose down
+```
+
+---
+
+## 🗂️ Directory Structure Overview
+```
+/styleverse
+├── backend       # Node.js Express backend
+├── frontend      # React frontend
+├── analytics     # FastAPI data analytics API
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## 🔑 Major Functionalities
+
+| Feature              | Admin  | User  |
+| -------------------- | ------ | ----- |
+| Add/Manage Products  | ✅     | ❌    |
+| View Analytics       | ✅     | ❌    |
+| Manage Orders        | ✅     | ❌    |
+| Create Account       | ❌     | ✅    |
+| Place Orders         | ❌     | ✅    |
+| Track Orders         | ❌     | ✅    |
+
+---
+
+## ⚔️ Challenges Faced
+- Integrating **FastAPI** with a **JavaScript-based stack**
+- Working with **MongoDB aggregation pipelines** for analytical queries
+- **Converting UI/UX from Figma to production-ready React components**
+- Handling **image uploads** over API calls
+- Configuring branding assets like **logo**
+- Handling **CORS** between React → Node → FastAPI
+
+---
+
+## 📅 Timeline
+- **Development:** 3-4 months
+- **Deployment & DevOps Setup:** ~1 month
+
+---
+
+## 🚀 Future Enhancements
+- Integration with payment gateways like **Razorpay/Stripe**
+- Real-time analytics dashboard using WebSockets
+- Recommendation engine for personalized shopping
+
+---
+
+## 🤝 Contribution
+Want to contribute? Feel free to open **Issues** or **Pull Requests**!
+
+---
+
+## 📜 License
+[MIT License](LICENSE)
+
+---
