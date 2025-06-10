@@ -82,11 +82,9 @@ const Product = () => {
       <div className="mt-20">
         <div className="flex">
           <b className='border px-5 py-3 text-sm' >Description</b>
-          <p className='border px-5 py-3 text-sm' >Reviews(122)</p>
         </div>
         <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500">
-            <p>An e-commerce website is an online platfoem that facilitates the buying and selling Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia libero ea dolorum obcaecati, hic culpa fuga fugit neque deleniti quibusdam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus est officiis quae molestiae. Exercitationem asperiores reprehenderit quia suscipit cupiditate recusandae.</p>
-            <p>E- commerce website Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint quae nemo possimus odit! Totam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis laboriosam ex tempora ipsa sit magni dolorum necessitatibus culpa voluptas voluptate. </p>
+            {productData.description}
         </div>
       </div>
       {/* display related product */}
