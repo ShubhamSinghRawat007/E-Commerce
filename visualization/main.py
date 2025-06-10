@@ -214,13 +214,29 @@ def insights_data(data: dict, user_data: dict = Depends(verify_token)):
                     "productPrice": {"$first": "$items.price"},
                     "productSubCategory": {"$first": "$items.subCategory"},
                     "isBestSeller": {"$first": "$items.bestSeller"},
-                    "productDescription": {"$first": "$items.description"},
+                    "productDescription": { "$first": "$items.description" },
                     "totalSold": {"$sum": "$items.quantity"},
                     "totalRevenue": {"$sum": {"$multiply": ["$items.price", "$items.quantity"]}}
                 }},
                 {
                     "$project": {
-                        "_id": 0
+                        "_id": 0,
+                        "productName": 1,
+                        "productImage": 1,
+                        "productCategory": 1,
+                        "productPrice": 1,
+                        "productSubCategory": 1,
+                        "isBestSeller": 1,
+                        "productDescription": {
+                            "$cond": {
+                                "if": { "$gt": [{ "$strLenCP": "$productDescription" }, 20] },
+                                "then": { "$concat": [ { "$substrCP": ["$productDescription", 0, 20] }, "..." ] },
+                                "else": "$productDescription"
+                            }
+                        },
+                        "totalSold": 1,
+                        "totalRevenue": 1,
+                        
                     }
                 },
                 {"$sort": {
@@ -229,7 +245,6 @@ def insights_data(data: dict, user_data: dict = Depends(verify_token)):
             ])
 
             products = pd.DataFrame(products.to_list())
-
             return JSONResponse(content={"success": True, "message": "loading", "data": products.to_dict(orient="records")})
         
         case "Top Payment Methods":

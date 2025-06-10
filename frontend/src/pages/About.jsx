@@ -14,10 +14,10 @@ const About = () => {
       <div className='my-10 flex flex-col md:flex-row gap-16 ' >
         <img src={assets.about_img} className='w-full md:max-w-[450px]' alt="" />
         <div className='flex flex-col justify-center gap-6 md:w-2/4 text-gray-600' >
-          <p>Forever is a brand for those who can think beyond the confines of what is? and imagine what if?
+          <p>StyleVerse is a brand for those who can think beyond the confines of what is? and imagine what if?
 Through our unique approach to fabrics, design, color, and aesthetics, we transform and reshape perceptions, challenging conventional fashion. We're constantly creating something new and unexpected. Our aesthetic embraces the absurd and the surreal.
 </p>
-          <p>Forever makes room for people to break free from the limitations of their world and escape into an alternate reality through our lens. Our love is interwoven between the threads of each product we make.</p>
+          <p>StyleVerse makes room for people to break free from the limitations of their world and escape into an alternate reality through our lens. Our love is interwoven between the threads of each product we make.</p>
           <b className='text-gray-800 ' >Our Mission</b>
           <p>Through our unique approach to fabrics, design, color, and aesthetics, we transform and reshape perceptions, challenging conventional fashion.!</p>
         </div>

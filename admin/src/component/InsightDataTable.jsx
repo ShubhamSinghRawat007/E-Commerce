@@ -23,15 +23,11 @@ const renderCellContent = (cell) => {
     if (imageUrls.length > 0) {
       return (
         <div className="flex gap-2 flex-wrap">
-          {imageUrls.map((url, idx) => (
-            <img
-              key={idx}
-              src={url}
-              alt={`img-${idx}`}
-              className="w-12 h-12 object-cover rounded border"
-              loading="lazy"
-            />
-          ))}
+          <img src={imageUrls[0]}
+            alt="img"
+            className="w-30 h-40 object-cover rounded border"
+            loading="lazy"
+          />
         </div>
       );
     }
@@ -51,7 +47,6 @@ const InsightsDataTable = ({ Data }) => {
   if (!Data || Data.length === 0) {
     return <div className="text-center text-gray-500">No data available.</div>;
   }
-
   const columns = Object.keys(Data[0]);
 
   return (
