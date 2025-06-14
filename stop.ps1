@@ -10,7 +10,7 @@ echo "
 
 echo "......................................................................"
 echo "Stopping Docker containers..."
-docker compose down
+docker compose stop
 echo "Containers stopped."
 
 echo "....................................................................."
