@@ -146,14 +146,43 @@ docker-compose down
 
 ---
 
+## 🚀 Docker Helper Scripts (Requires Docker Installed)
+
+For convenience, you can use the provided shell scripts (for Linux/macOS) and PowerShell scripts (for Windows) to manage your Docker containers. Ensure you are in the root directory of the project (E-Commerce) when running these scripts.
+
+| Script Name     |	Operating System |	Description                                 |
+|-----------------|------------------|----------------------------------------------|
+| build_start.sh  |	Linux/macOS      |	Builds Docker images and starts containers. |
+| build_start.ps1 |	Windows          |	Builds Docker images and starts containers. |
+| start.sh        |	Linux/macOS      |	Starts pre-built Docker containers.         |
+| start.ps1       |	Windows          |	Starts pre-built Docker containers.         |
+| stop.sh         |	Linux/macOS      |	Stops and removes Docker containers.        |
+| stop.ps1        |	Windows          |	Stops and removes Docker containers.        |
+
+### Usage Examples:
+```bash
+# On Linux/macOS
+./build_start.sh
+
+# On Windows (in PowerShell)
+.\build_start.ps1
+```
+
 ## 🗂️ Directory Structure Overview
 ```
 /styleverse
-├── backend       # Node.js Express backend
-├── frontend      # React frontend
+├── backend           # Node.js Express backend
+├── frontend          # React frontend
 ├── visualization     # FastAPI data analytics API
 ├── docker-compose.yml
-└── README.md
+├── build_start.sh    # Docker helper script for Linux/macOS
+├── build_start.ps1   # Docker helper script for Windows
+├── start.sh          # Docker helper script for Linux/macOS
+├── start.ps1         # Docker helper script for Windows
+├── stop.sh           # Docker helper script for Linux/macOS
+├── stop.ps1          # Docker helper script for Windows
+|── README.md
+|__ LICENSE.md
 ```
 
 ---
