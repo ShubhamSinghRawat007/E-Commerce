@@ -12,29 +12,6 @@ class Visualize:
         pass
 
     @staticmethod
-    def generate_new_old_customers_graph(dates_for_chart: list, values_for_new_customers: list, values_for_returning_customers: list) -> BytesIO:
-        
-        plt.figure(figsize=(10, 5))
-        plt.plot(dates_for_chart, values_for_new_customers, label="New Customers", color="#FF9900")
-        plt.plot(dates_for_chart, values_for_returning_customers, label="Returning Customers", color="green")
-        plt.xlabel('Date')
-        plt.xticks(dates_for_chart[::10], rotation=45)
-        plt.gcf().autofmt_xdate()
-        plt.ylabel('People')
-        plt.title('New Customers and Returning Customers')
-        plt.grid(True)
-        plt.legend()
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-
-        img = BytesIO()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plt.close()
-
-        return img
-
-    @staticmethod
     def generate_revenue_overtime_graph(dates:list, revenue:list) -> BytesIO:
         plt.figure(figsize=(12, 5))  # Adjust figure size for better readability
         plt.plot(dates, revenue, label="Revenue", color="green")
