@@ -11,7 +11,7 @@ echo "
 echo "......................................................................"
 echo "starting the container"
 
-docker compose up -d
+docker compose start
 
 echo "containers started and in running state"
 
